@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Interactive Computer Graphics with WebGL - Assignment 1 - Tessellation and Twist</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+        <script type="text/javascript" src="../Common/initShaders.js"></script>
+        <script type="text/javascript" src="../Common/MV.js"></script>
+        <script type="text/javascript" src="twist.js"></script>
+        <script id="vertex-shader" type="x-shader/x-vertex">
+            attribute vec4 vPosition;
+            uniform float theta;    // rotation in radians
+            varying float d;        // distance from origin
+            void main()
+            {
+                d = sqrt((vPosition[0] * vPosition[0]) + (vPosition[1] * vPosition[1]));
+                float angle = d * theta;
+                vec2 v = vec2((vPosition[0] * cos(angle)) - (vPosition[1] * sin(angle)), (vPosition[0] * sin(angle)) + (vPosition[1] * cos(angle)));
+                gl_Position = vec4(v, 0.0, 1.0);
+            }
+        </script>
+        <script id="fragment-shader" type="x-shader/x-fragment">
+            precision mediump float;
+            void main()
+            {
+                gl_FragColor = vec4( 1.0, 0.0, 1.0, 1.0 );
+            }
+        </script>
+        <script src="js/libs/modernizr-2.5.3.min.js"></script>
+    </head>
+
+    <body>
+        <h1>Interactive Computer Graphics with WebGL</h1>
+        <h2>Assignment 1 - Tessellation and Twist</h2>
+        <p>Play with the controls...</p>
+        <br>
+        <div>
+            <div id="numTimesToSubdivideSlider" style="margin-left: 30%; width: 40%"></div>
+            <label for="textLevelOutput">Number of times to subdivide (tessellation count from 0 to 10): </label>
+            <input type="text" id="textLevelOutput" readonly="true" size="1" value="0" />
+        </div>
+        <br>
+        <div>
+            <div id="thetaSlider" style="margin-left: 30%; width: 40%"></div>
+            <label for="thetaOutput">Angle of twist (degrees from -360 to +360): </label>
+            <input type="text" id="thetaOutput" readonly="true" size="1" value="0" />
+        </div>
+        <br>
+        Select polygon:
+        <select id="initialPolygon" class="selectmenu">
+            <option value="triangle" selected>triangle</option>
+            <option value="square">square</option>
+        </select>
+        <br>
+        <br>
+        <canvas id="gl-canvas" width="512" height="512">
+        Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+    </body>
+</html>
